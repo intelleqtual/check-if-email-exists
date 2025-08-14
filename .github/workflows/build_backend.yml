@@ -2,7 +2,7 @@ name: Build Reacher Backend
 
 on:
   push:
-    branches: [master]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -12,12 +12,11 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
-          target: x86_64-pc-windows-msvc
+          targets: x86_64-pc-windows-msvc
           profile: minimal
-          override: true
 
       - name: Build Backend
         run: |
@@ -25,8 +24,10 @@ jobs:
           cargo build --release --bin reacher_backend
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: reacher-backend.exe
-          path: backend/target/release/reacher_backend.exe
+          name: reacher-backend
+          path: |
+            backend/target/release/reacher_backend.exe
+            backend/target/release/reacher_backend.pdb
 
