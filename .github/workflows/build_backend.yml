@@ -1,0 +1,31 @@
+name: Build Reacher Backend
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-pc-windows-msvc
+          profile: minimal
+          override: true
+
+      - name: Build Backend
+        run: |
+          cd backend
+          cargo build --release --bin reacher_backend
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: reacher-backend.exe
+          path: backend/target/release/reacher_backend.exe
